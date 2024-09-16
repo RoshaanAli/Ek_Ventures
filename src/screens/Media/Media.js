@@ -6,6 +6,7 @@ import { responsiveWidth, responsiveFontSize, responsiveScreenFontSize, responsi
 import Video from 'react-native-video';
 import numeral from "numeral"
 import { useFocusEffect } from '@react-navigation/native';
+import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import KeepAwake from 'react-native-keep-awake';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -24,7 +25,7 @@ function RenderMediaItem({
   flatLayout,
 }) {
   const [loading, setLoading] = useState(false)
-  const [above, onChangeAbove] = useState(false)
+  // const [above, onChangeAbove] = useState(false)
   const [pause, onSetPause] = useState(false);
   const mediaPlayerRef = useRef(null);
 
@@ -64,7 +65,7 @@ function RenderMediaItem({
           {(pause && (item.id == current.id)) ? (
             <View style={{
               ...styles.videoPlay,
-              top: (item?.orientation == undefined || item?.orientation != 'portrait') && above ? (Dimensions.get('window').width / (16 / 9)) / 2 : (flatLayout.height / 2) - responsiveWidth(15 / 2)
+              // top: (item?.orientation == undefined || item?.orientation != 'portrait') && above ? (Dimensions.get('window').width / (16 / 9)) / 2 : (flatLayout.height / 2) - responsiveWidth(15 / 2)
             }}>
               <TouchableOpacity onPress={play_pause} style={styles.touchPlayPause}>
                 <FontAwesome
@@ -75,10 +76,10 @@ function RenderMediaItem({
               </TouchableOpacity>
             </View>
           ) : null}
-          {loading && (
+          {(loading && !pause) && (
             <View style={{
               ...styles.videoPlay,
-              top: (item?.orientation == undefined || item?.orientation != 'portrait') && above ? (flatLayout.height / 2) - responsiveWidth((15 + 56.25)) : (flatLayout.height / 2) - responsiveWidth(15 / 2)
+              // top: (item?.orientation == undefined || item?.orientation != 'portrait') && above ? (flatLayout.height / 2) - responsiveWidth((15 + 56.25)) : (flatLayout.height / 2) - responsiveWidth(15 / 2)
             }}>
               <Loader color={"white"} />
             </View>
@@ -90,9 +91,10 @@ function RenderMediaItem({
               paused={(item.index == current?.index) ? pause : true}
               ref={mediaPlayerRef}
               style={[{
-                width: '100%'
+                width: '100%',
+                flex:1
               },
-              (item?.orientation == undefined || item?.orientation != 'portrait') && above ? { height: Dimensions.get('window').width / (16 / 9) } : { flex: 1 }
+              // (item?.orientation == undefined || item?.orientation != 'portrait') && above ? { height: Dimensions.get('window').width / (16 / 9) } : { flex: 1 }
               ]}
               repeat
               playInBackground={false}
@@ -104,9 +106,10 @@ function RenderMediaItem({
               }}
               onBuffer={() => setLoading(true)}
               onProgress={() => setLoading(false)}
-              posterResizeMode={(item?.orientation == undefined || item?.orientation != 'portrait') ? "contain" : "cover"}
+              // posterResizeMode={(item?.orientation == undefined || item?.orientation != 'portrait') ? "contain" : "cover"}
               currentPlaybackTime={500}
-              resizeMode={(item?.orientation == undefined || item?.orientation != 'portrait') ? "contain" : "cover"}
+              // resizeMode={(item?.orientation == undefined || item?.orientation != 'portrait') ? "contain" : "cover"}
+              resizeMode='contain'
               trackId
               selectedVideoTrack={{ type: 'resolution', value: 720 }}
               automaticallyWaitsToMinimizeStalling={false}
@@ -116,13 +119,13 @@ function RenderMediaItem({
           )}
 
         </TouchableOpacity>
-        {
+        {/* {
           (item?.orientation == undefined || item?.orientation != 'portrait') && above &&
           <View style={{ height: flatLayout.height - Dimensions.get('window').width / (16 / 9) }} />
-        }
+        } */}
       </>
     )
-  }, [item, pause, current, above, flatLayout, loading])
+  }, [item, pause, current, flatLayout, loading])
 
   return (
     <View key={index} style={{

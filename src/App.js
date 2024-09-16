@@ -7,6 +7,7 @@
 
 import React, { useEffect } from 'react';
 import {
+    LogBox,
     View,
 } from 'react-native';
 import SplashScreen from 'react-native-splash-screen'
@@ -20,6 +21,9 @@ export default function App() {
     useEffect(() => {
         SplashScreen.hide();
     }, [])
+    LogBox.ignoreLogs([
+        'Non-serializable values were found in the navigation state',
+      ]);
 
     return (
         <Provider store={store}>

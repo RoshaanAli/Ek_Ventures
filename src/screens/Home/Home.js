@@ -1,26 +1,28 @@
-import React, { useEffect } from 'react'
-import { FlatList, Image, StyleSheet, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { FlatList, Image, ScrollView, StyleSheet, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { responsiveHeight } from 'react-native-responsive-dimensions'
 import { connect } from 'react-redux'
 import AppText from '../../components/AppText'
 import AppHeading from '../../components/AppHeading'
-import colors from '../../assets/colors/colors'
 import SubTitleCard from '../../components/SubTitleCard'
 import VideoPreviewItem from '../../components/VideoPreviewItem'
 import Btn from '../../components/Btn'
+import Loader from '../../components/Loader'
+import colors from '../../assets/colors/colors'
 import * as videosAct from '../../store/actions/videosAct'
 
 const Home = ({ getVideos, videosRed }) => {
+    const [loader, setLoader] = useState(true)
     const navigation = useNavigation()
 
     useEffect(() => {
-        getVideos()
+        getVideos().then(() => setLoader(false))
     }, [])
 
     return (
-        <View style={styles.container}>
-            <AppHeading text={"Hello, John"} style={{ textAlign: "center", marginVertical: responsiveHeight(1.5) }} />
+        <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+            <AppHeading text={"Hello, John"} style={{ textAlign: "center", marginVertical: responsiveHeight(1) }} />
             <AppText text={"Please tap below"} style={{ marginVertical: responsiveHeight(1.5) }} />
             <SubTitleCard />
             <View style={styles.mediaContainer}>
@@ -29,28 +31,31 @@ const Home = ({ getVideos, videosRed }) => {
                     <AppHeading text={'Media'} style={{ fontSize: 20 }} />
                 </View>
             </View>
-            <View>
-                <FlatList
-                    keyExtractor={(item, i) => i.toString()}
-                    horizontal={true}
-                    data={videosRed}
-                    renderItem={(it) => {
-                        return <VideoPreviewItem onPress={() => {
-                            navigation.jumpTo('Media'
-                                , {
-                                    data: it,
-                                    setCurrent: { ...it, index: it.index },
-                                }
-                            );
-                        }} />
-                    }}
-                    showsHorizontalScrollIndicator={false}
-                />
+            <View style={styles.videosContainer}>
+                {loader ? <Loader /> :
+                    <FlatList
+                        keyExtractor={(item, i) => i.toString()}
+                        horizontal={true}
+                        data={videosRed}
+                        renderItem={(it) => {
+                            return <VideoPreviewItem data={it} onPress={() => {
+                                navigation.jumpTo('Media'
+                                    , {
+                                        data: it,
+                                        setCurrent: { ...it, index: it.index },
+                                    }
+                                );
+                            }} />
+                        }}
+                        showsHorizontalScrollIndicator={false}
+                    />}
             </View>
-            <Btn text="Upload" onPress={() => {
-                navigation.navigate("Media")
-            }} />
-        </View>
+            <Btn text="Upload"
+                containerStyle={{marginBottom:responsiveHeight(2)}}
+                onPress={() => {
+                    console.log("upload")
+                }} />
+        </ScrollView>
     )
 }
 
@@ -76,5 +81,8 @@ const styles = StyleSheet.create({
     },
     mediaHeader: {
         flexDirection: "row"
+    },
+    videosContainer: {
+        height: responsiveHeight(43),
     }
 })
