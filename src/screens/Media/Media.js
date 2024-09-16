@@ -25,7 +25,6 @@ function RenderMediaItem({
   flatLayout,
 }) {
   const [loading, setLoading] = useState(false)
-  // const [above, onChangeAbove] = useState(false)
   const [pause, onSetPause] = useState(false);
   const mediaPlayerRef = useRef(null);
 
@@ -65,7 +64,6 @@ function RenderMediaItem({
           {(pause && (item.id == current.id)) ? (
             <View style={{
               ...styles.videoPlay,
-              // top: (item?.orientation == undefined || item?.orientation != 'portrait') && above ? (Dimensions.get('window').width / (16 / 9)) / 2 : (flatLayout.height / 2) - responsiveWidth(15 / 2)
             }}>
               <TouchableOpacity onPress={play_pause} style={styles.touchPlayPause}>
                 <FontAwesome
@@ -79,7 +77,6 @@ function RenderMediaItem({
           {(loading && !pause) && (
             <View style={{
               ...styles.videoPlay,
-              // top: (item?.orientation == undefined || item?.orientation != 'portrait') && above ? (flatLayout.height / 2) - responsiveWidth((15 + 56.25)) : (flatLayout.height / 2) - responsiveWidth(15 / 2)
             }}>
               <Loader color={"white"} />
             </View>
@@ -94,7 +91,6 @@ function RenderMediaItem({
                 width: '100%',
                 flex:1
               },
-              // (item?.orientation == undefined || item?.orientation != 'portrait') && above ? { height: Dimensions.get('window').width / (16 / 9) } : { flex: 1 }
               ]}
               repeat
               playInBackground={false}
@@ -106,9 +102,7 @@ function RenderMediaItem({
               }}
               onBuffer={() => setLoading(true)}
               onProgress={() => setLoading(false)}
-              // posterResizeMode={(item?.orientation == undefined || item?.orientation != 'portrait') ? "contain" : "cover"}
               currentPlaybackTime={500}
-              // resizeMode={(item?.orientation == undefined || item?.orientation != 'portrait') ? "contain" : "cover"}
               resizeMode='contain'
               trackId
               selectedVideoTrack={{ type: 'resolution', value: 720 }}
@@ -119,10 +113,6 @@ function RenderMediaItem({
           )}
 
         </TouchableOpacity>
-        {/* {
-          (item?.orientation == undefined || item?.orientation != 'portrait') && above &&
-          <View style={{ height: flatLayout.height - Dimensions.get('window').width / (16 / 9) }} />
-        } */}
       </>
     )
   }, [item, pause, current, flatLayout, loading])
